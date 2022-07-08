@@ -3,6 +3,7 @@ Ansible Automation Ansible QUIZ 1 from Adinusa
 1. Create Directory 
 
     mkdir quiz1/
+    
     cd quiz1/
 
 2. file ansible.cfg
