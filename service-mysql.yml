@@ -1,6 +1,6 @@
 - name: install and start mariadb-server and mariadb-client
-- hosts: a
-- become: true
+  hosts: a
+  become: true
 
   tasks:
     - name: ADD apt-key
