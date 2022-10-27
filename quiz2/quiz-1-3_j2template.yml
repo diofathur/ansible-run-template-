@@ -1,0 +1,45 @@
+- name: install and start mariadb dan nginx
+  hosts: web
+  become: true
+  tasks: 
+    - name: ADD apt-key
+      apt_key:
+        url: https://mariadb.org/mariadb_release_signing_key.asc
+        state: present
+    - name: ADD apt-key nginx
+      apt_key:
+        url: https://nginx.org/keys/nginx_signing.key
+        state: present
+
+    - name: mariadb repo
+      template: src=./mariadb.list.j2 dest=/etc/apt/sources.list.d/mariadb.list
+
+    - name: nginx repo
+      template: src=./nginx.list.j2 dest=/etc/apt/sources.list.d/nginx.list
+
+    - name: install mariadb-server
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        name: mariadb-server
+        state: present
+
+    - name: install mariadb-client
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        name: mariadb-client
+        state: present
+
+    - name: install nginx 
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        name: nginx-1.23.1
+        state: present
+
+    - name: mariadb started and enabled
+      service: name=mariadb state=started enabled=yes
+
+    - name: nginx started and enabled
+      service: name=nginx state=started enabled=yes
