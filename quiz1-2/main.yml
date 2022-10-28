@@ -1,0 +1,39 @@
+- name: Deploy and start Apache 2 service
+  hosts: webserver
+  become: true
+  vars:
+    required_Pkg:
+    - apache2
+    - python3-urllib3
+    web_Service: apache2
+    content_File: index.html
+    dest_File: /var/www/html/index.html
+  tasks:
+    - name: Required packages are installed and up to date
+      apt:
+        update_cache: yes
+        force_apt_get: yes
+        name:
+          - "{{required_Pkg}}"
+        state: latest
+    - name: The {{web_Service}} service is started and enabled
+      service:
+         name: "{{web_Service}}"
+         enabled: true
+         state: started
+    - name: Web content is in place
+      copy:
+        src: "{{content_File}}"
+        dest: "{{dest_File}}"
+- name: Verify the apache service
+  hosts: localhost
+  tasks:
+    - name: Ensure the webserver is reacheable
+      uri:
+        url: http://pod-username-managed2
+        status_code: 200
+        return_content: yes
+      register: Result
+    - name: Print Ouput Webserver
+      debug:
+        var: Result.content
